@@ -1,0 +1,20 @@
+#!/bin/bash
+{{ ansible_managed | comment }}
+
+# Remove all rules to reset
+/sbin/tc qdisc del dev {{ tc_config_interface }} root 2>/dev/null
+
+# Define Network Interface and set default speed
+/sbin/tc qdisc ad dev {{ tc_config_interface }} root handle 1: htb default 1
+/sbin/tc class add dev {{ tc_config_interface }} parent 1: classid 1:1 htb rate {{ tc_config_speed }} burst {{ tc_config_burst }}
+
+# Define classes
+{% for class in tc_config_classes %}
+{{ class.comment | comment}}
+/sbin/tc class add dev {{ tc_config_interface }} parent 1:1 classid 1:{{ class.name }} htb rate {{ class.rate }} ceil {{ class.ceil }} burst {{ class.burst }} cburst {{ class.cburst }}
+{% endfor %}
+
+# Define parent classes
+{% for filter in tc_config_filters %}
+/sbin/tc filter add dev {{ tc_config_interface }} protocol ip parent 1:{{ filter.id }} prio {{ filter.prio }} u32 match ip src {{ tc_vip_ip }}/32 match ip dst {{ filter.source }} flowid 1:{{ filter.class }}
+{% endfor %}

@@ -1,0 +1,12 @@
+---
+- name: reload systemd_modules
+  systemd:
+    name: systemd-modules-load
+    state: restarted
+  become: true
+  tags: tc
+
+- name: restart tc
+  command: "{{ tc_script_path }}/tc.sh"
+  become: true
+  tags: tc

@@ -1,0 +1,42 @@
+---
+- name: install python3
+  package:
+    name:
+      - python-setuptools
+      - python3
+      - python3-devel
+      - python3-pip
+    state: present
+  become: true
+  tags: tc
+
+- name: install tcconfig
+  pip:
+    name: tcconfig
+    state: present
+    executable: pip3
+  become: true
+  tags: tc
+
+- name: copy traffic control script
+  template:
+    src: tc.sh.j2
+    dest: "{{ tc_script_path }}/tc.sh"
+    owner: root
+    group: root
+    mode: 0755
+  notify: restart tc
+  become: true
+  tags: tc
+
+- name: generate modules files
+  copy:
+    dest: "/etc/modules-load.d/tcconfig.conf"
+    owner: root
+    group: root
+    mode: 0644
+    content: |
+      sch_netem
+  notify: reload systemd_modules
+  become: true
+  tags: tc

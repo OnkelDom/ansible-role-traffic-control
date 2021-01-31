@@ -1,0 +1,66 @@
+---
+tc_script_path: /usr/local/bin
+tc_config_interface: eth0
+tc_config_speed: "10000000.0kbit"
+tc_config_burst: "15k"
+tc_vip_ip: "{{ ansible_vip_ip }}"
+tc_config_filters:
+  - id: 0
+    source: "10.60.0.0/14"
+    prio: 1
+    class: 18
+tc_config_classes:
+  - name: 10
+    comment: "10 Mbit/s"
+    rate: "156.0kbit"
+    ceil: "156.0kbit"
+    burst: "128.0KB"
+    cburst: "128.0KB"
+  - name: 11
+    comment: "50 Mbit/s"
+    rate: "196.0kbit"
+    ceil: "156.0kbit"
+    burst: "128.0KB"
+    cburst: "128.0KB"
+  - name: 12
+    comment: "100 Mbit/s"
+    rate: "256.0kbit"
+    ceil: "256.0kbit"
+    burst: "128.0KB"
+    cburst: "128.0KB"
+  - name: 13
+    comment: "250 Mbit/s"
+    rate: "396.0kbit"
+    ceil: "396.0kbit"
+    burst: "128.0KB"
+    cburst: "128.0KB"
+  - name: 14
+    comment: "500 Mbit/s"
+    rate: "556.0kbit"
+    ceil: "556.0kbit"
+    burst: "128.0KB"
+    cburst: "128.0KB"
+  - name: 15
+    comment: "1 Gbit/s"
+    rate: "1124.0kbit"
+    ceil: "1124.0kbit"
+    burst: "128.0KB"
+    cburst: "128.0KB"
+  - name: 16
+    comment: "2,5 Gbit/s"
+    rate: "2896.0kbit"
+    ceil: "2896.0kbit"
+    burst: "128.0KB"
+    cburst: "128.0KB"
+  - name: 17
+    comment: "5 Gbit/s"
+    rate: "5596.0kbit"
+    ceil: "5596.0kbit"
+    burst: "128.0KB"
+    cburst: "128.0KB"
+  - name: 18
+    comment: "8 Gbit/s"
+    rate: "8384.0kbit"
+    ceil: "8384.0kbit"
+    burst: "128.0KB"
+    cburst: "128.0KB"
